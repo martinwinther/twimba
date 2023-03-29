@@ -1,7 +1,7 @@
 import { tweetsData } from './data';
 
-const tweetInput = document.getElementById('tweet-input');
-const tweetBtn = document.getElementById('tweet-btn');
+// UUID generator
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
 // Click functionality
 document.addEventListener('click', function (e) {
@@ -12,7 +12,7 @@ document.addEventListener('click', function (e) {
   } else if (e.target.dataset.retweet) {
     handleRetweetClick(e.target.dataset.retweet);
   } else if (e.target.id === 'tweet-btn') {
-    console.log(tweetInput.value);
+    handleTweetBtnClick();
   }
 });
 
@@ -47,6 +47,25 @@ function handleRetweetClick(tweetId) {
   }
   targetTweetObj.isRetweeted = !targetTweetObj.isRetweeted;
 
+  renderTweets();
+}
+
+function handleTweetBtnClick() {
+  const tweetInput = document.getElementById('tweet-input');
+
+  if (tweetInput.value)
+    tweetsData.unshift({
+      handle: `@DefinetlyARealPerson`,
+      profilePic: `images/scrimbalogo.png`,
+      likes: 0,
+      retweets: 0,
+      tweetText: tweetInput.value,
+      replies: [],
+      isLiked: false,
+      isRetweeted: false,
+      uuid: uuidv4(),
+    });
+  tweetInput.value = '';
   renderTweets();
 }
 
@@ -86,7 +105,7 @@ function getFeedHtml() {
         <img src="${tweet.profilePic}" class="profile-pic">
         <div>
             <p class="handle">${tweet.handle}</p>
-            <p class="tweet-text">T${tweet.tweetText}</p>
+            <p class="tweet-text">${tweet.tweetText}</p>
             <div class="tweet-details">
                 <span class="tweet-detail">
                     <i class="fa-regular fa-comment-dots" 
